@@ -20,7 +20,7 @@ services:
     image: seafileltd/seafile-mc:latest
     container_name: seafile
     ports:
-      - "8085:80"
+      - "8088:80"
     volumes:
       - seafile_data:/shared
     environment:
