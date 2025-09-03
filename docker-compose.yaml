@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  db:
+    image: mariadb:10.11
+    container_name: seafile-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=example
+      - MYSQL_LOG_CONSOLE=true
+      - MYSQL_DATABASE=seafile
+      - MYSQL_USER=seafile
+      - MYSQL_PASSWORD=seafile_pass
+    volumes:
+      - db_data:/var/lib/mysql
+
+  memcached:
+    image: memcached:1.6
+    container_name: seafile-memcached
+
+  seafile:
+    image: seafileltd/seafile-mc:latest
+    container_name: seafile
+    ports:
+      - "8085:80"
+    volumes:
+      - seafile_data:/shared
+    environment:
+      - DB_HOST=db
+      - DB_ROOT_PASSWD=example
+      - MYSQL_USER=seafile
+      - MYSQL_USER_PASSWORD=seafile_pass
+      - SEAFILE_ADMIN_EMAIL=admin@cloud.upcube.ai
+      - SEAFILE_ADMIN_PASSWORD=SuperSecretPass
+      - SEAFILE_SERVER_HOSTNAME=cloud.upcube.ai
+    depends_on:
+      - db
+      - memcached
+
+volumes:
+  db_data:
+  seafile_data:
